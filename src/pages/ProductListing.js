@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "./ProductListing.css";
@@ -7,7 +7,7 @@ const ProductListing = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [maxPrice, setMaxPrice] = useState(1000);
 
   useEffect(() => {
@@ -19,15 +19,17 @@ const ProductListing = () => {
     });
   }, []);
 
-  const filterProducts = () => {
+  const filterProducts = useCallback(() => {
     let filtered = products.filter((p) => p.price <= maxPrice);
     if (selectedCategory !== "All") {
       filtered = filtered.filter((p) => p.category === selectedCategory);
     }
     setFilteredProducts(filtered);
-  };
+  }, [products, selectedCategory, maxPrice]);
 
-  useEffect(() => { filterProducts(); }, [selectedCategory, maxPrice]);
+  useEffect(() => {
+    filterProducts();
+  }, [filterProducts]);
 
   return (
     <div className="container">
@@ -44,7 +46,7 @@ const ProductListing = () => {
           min="5"
           max="1000"
           value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
+          onChange={(e) => setMaxPrice(Number(e.target.value))}
         />
         <span className="price-text">Max Price: ${maxPrice}</span>
       </div>
@@ -57,7 +59,6 @@ const ProductListing = () => {
                 <p className="product-title">{product.title}</p>
                 <p className="product-price">${product.price}</p>
               </div>
-
             </Link>
           </div>
         ))}
