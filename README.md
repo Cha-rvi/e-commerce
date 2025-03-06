@@ -59,5 +59,3 @@ The app will run on `http://localhost:3000/` 🚀
 ## 🤝 Contributing
 Feel free to contribute! Fork the repo, make changes, and submit a **pull request**.
 
-## 📜 License
-This project is **MIT licensed**.
